@@ -3,7 +3,37 @@ import numpy as np
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
-class RunningAverage():
+def add_overlay(image, overlay, y1, x1):
+    y1Slice = int(min(y1, 0) * -1)
+    x1Slice = int(min(x1, 0) * -1)
+    y2Slice = int(min(y1 + overlay.shape[0], image.shape[0]) - y1)
+    x2Slice = int(min(x1 + overlay.shape[1], image.shape[1]) - x1)
+
+    print(f"y1Slice: {y1Slice}, x1Slice: {x1Slice}, y2Slice: {y2Slice}, x2Slice: {x2Slice}")
+
+    if y1Slice > overlay.shape[0] or \
+        x1Slice > overlay.shape[1] or \
+        y2Slice <= 0 or \
+        x2Slice <= 0:
+
+        return image
+
+    y1 = max(y1, 0)
+    x1 = max(x1, 0)
+    y2 = y1 - y1Slice + y2Slice
+    x2 = x1 - x1Slice + x2Slice
+
+    overlayAlpha = overlay[y1Slice:y2Slice, x1Slice:x2Slice, 3] / 255.0
+    imageAlpha = 1.0 - overlayAlpha
+
+    for c in range(0, 3):
+        image[y1:y2, x1:x2, c] = (overlayAlpha * overlay[y1Slice:y2Slice, x1Slice:x2Slice, c] +
+                                  imageAlpha * image[y1:y2, x1:x2, c])
+
+    return image
+
+
+class RunningAverage:
 
     def __init__(self, targetSize):
         self.targetSize = targetSize
@@ -33,8 +63,8 @@ class MJPEGServer(BaseHTTPRequestHandler):
     mask = cv2.imread("C:/Users/Owen/Programming/Python/WebcamScrewery/myface.png", -1)
     upscale = .55
     runningAverageScale = RunningAverage(5)
-    runningAverageX = RunningAverage(3)
-    runningAverageY = RunningAverage(3)
+    runningAverageX = RunningAverage(2)
+    runningAverageY = RunningAverage(2)
 
     camera = None
 
@@ -58,35 +88,53 @@ class MJPEGServer(BaseHTTPRequestHandler):
                 (startX, startY, endX, endY) = box.astype("int")
 
                 width = endX - startX
-
                 width = MJPEGServer.runningAverageScale.add(width)
 
-                widthAddition = width * (MJPEGServer.upscale / 2)
+                widthAddition = width * MJPEGServer.upscale / 2
                 width = int(width * (1 + MJPEGServer.upscale))
 
                 height = int(width * maskRatio)
 
-                mid = ((endY - startY) / 2) + startY
-
+                y1 = startY + ((endY - startY - height) / 2)
                 x1 = startX - widthAddition
-                y1 = mid - (height / 2)
 
-                x1 = int(MJPEGServer.runningAverageX.add(x1))
                 y1 = int(MJPEGServer.runningAverageY.add(y1))
+                x1 = int(MJPEGServer.runningAverageX.add(x1))
 
-                x2 = int(x1 + width)
-                y2 = int(y1 + height)
+                overlay = cv2.resize(MJPEGServer.mask, (width, height))
 
-                tempMask = cv2.resize(MJPEGServer.mask, (width, height))
+                frame = add_overlay(frame, overlay, y1, x1)
 
-                maskAlpha = tempMask[:, :, 3] / 255.0
-                frameAlpha = 1.0 - maskAlpha
+                # width = endX - startX
+                #
+                # width = MJPEGServer.runningAverageScale.add(width)
+                #
+                # widthAddition = width * (MJPEGServer.upscale / 2)
+                # width = int(width * (1 + MJPEGServer.upscale))
+                #
+                # height = int(width * maskRatio)
+                #
+                # mid = ((endY - startY) / 2) + startY
+                #
+                # x1 = startX - widthAddition
+                # y1 = mid - (height / 2)
+                #
+                # x1 = int(MJPEGServer.runningAverageX.add(x1))
+                # y1 = int(MJPEGServer.runningAverageY.add(y1))
+                #
+                # x2 = int(x1 + width)
+                # y2 = int(y1 + height)
+                #
+                # tempMask = cv2.resize(MJPEGServer.mask, (width, height))
+                #
+                # maskAlpha = tempMask[:, :, 3] / 255.0
+                # frameAlpha = 1.0 - maskAlpha
+                #
+                # for c in range(0, 3):
+                #     frame[y1:y2, x1:x2, c] = (maskAlpha * tempMask[:, :, c] +
+                #                               frameAlpha * frame[y1:y2, x1:x2, c])
 
-                for c in range(0, 3):
-                    frame[y1:y2, x1:x2, c] = (maskAlpha * tempMask[:, :, c] +
-                                              frameAlpha * frame[y1:y2, x1:x2, c])
-
-                #cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255), 2)
+                cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255), 2)
 
         return ret, frame
 
