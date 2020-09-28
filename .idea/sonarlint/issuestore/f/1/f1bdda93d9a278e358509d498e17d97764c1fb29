@@ -1,3 +1,36 @@
 
-=python:S1256"Remove this commented out code.(Êˆ”µ8ŞÓ ¬É.
-python:S117F"\Rename this local variable "fileContent" to match the regular expression ^[_a-z][a-z0-9_]*$.(ßÊíúøÿÿÿÿ8çæ¨­É.
+vpython:S116Š"RRename this field "targetSize" to match the regular expression ^[_a-z][_a-z0-9]*$.(¶¦™İøÿÿÿÿ8˜”©üÉ.
+|python:S117B"^Rename this local variable "widthAddition" to match the regular expression ^[_a-z][a-z0-9_]*$.(™êŸ£8˜”©üÉ.
+vpython:S117"XRename this local variable "x2Slice" to match the regular expression ^[_a-z][a-z0-9_]*$.(™ ²8˜”©üÉ.
+upython:S1167"WRename this field "runningAverageY" to match the regular expression ^[_a-z][_a-z0-9]*$.(¹ù’¡8˜”©üÉ.
+Cpython:S125«"Remove this commented out code.(¤ë´óùÿÿÿÿ8ÙûÆşÉ.
+upython:S117"XRename this local variable "y2Slice" to match the regular expression ^[_a-z][a-z0-9_]*$.(†¹äY8˜”©üÉ.
+spython:S117;"URename this local variable "endY" to match the regular expression ^[_a-z][a-z0-9_]*$.(¡µ†ß8˜”©üÉ.
+ypython:S117\"VRename this local variable "yAxis" to match the regular expression ^[_a-z][a-z0-9_]*$.(öÌ „ÿÿÿÿÿ8˜”©üÉ.
+€python:S117""]Rename this local variable "overlayAlpha" to match the regular expression ^[_a-z][a-z0-9_]*$.(­Şıïûÿÿÿÿ8˜”©üÉ.
+Cpython:S125ò"Remove this commented out code.(¥”ÂÀøÿÿÿÿ8º‹ã–Ê.
+python:S117w"\Rename this local variable "maskCenterY" to match the regular expression ^[_a-z][a-z0-9_]*$.(Øñ¤Üúÿÿÿÿ8È™ƒşÉ.
+€python:S117Ş"\Rename this local variable "fileContent" to match the regular expression ^[_a-z][a-z0-9_]*$.(ßÊíúøÿÿÿÿ8º‹ã–Ê.
+upython:S117;"WRename this local variable "startY" to match the regular expression ^[_a-z][a-z0-9_]*$.(¡µ†ß8˜”©üÉ.
+ypython:S117#"[Rename this local variable "imageAlpha" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ç³›•8˜”©üÉ.
+>python:S125Ë"Remove this commented out code.(Êˆ”µ8˜”©üÉ.
+qpython:S116b"SRename this field "shapedImage" to match the regular expression ^[_a-z][_a-z0-9]*$.(Ø£©Á8˜”©üÉ.
+Cpython:S125 "Remove this commented out code.(şü…Ìúÿÿÿÿ8•ÆşÉ.
+upython:S117;"WRename this local variable "startX" to match the regular expression ^[_a-z][a-z0-9_]*$.(¡µ†ß8˜”©üÉ.
+python:S117w"\Rename this local variable "maskCenterX" to match the regular expression ^[_a-z][a-z0-9_]*$.(Øñ¤Üúÿÿÿÿ8È™ƒşÉ.
+spython:S116Y"PRename this field "lefteyeX" to match the regular expression ^[_a-z][_a-z0-9]*$.(£àùÿÿÿÿ8šıÉ.
+vpython:S117"XRename this local variable "y1Slice" to match the regular expression ^[_a-z][a-z0-9_]*$.(ü°û8˜”©üÉ.
+vpython:S116e"XRename this field "startingDistance" to match the regular expression ^[_a-z][_a-z0-9]*$.(’ÿíã8’úÌıÉ.
+zpython:S117‰"VRename this parameter "targetSize" to match the regular expression ^[_a-z][a-z0-9_]*$.(´ú–†üÿÿÿÿ8˜”©üÉ.
+spython:S117;"URename this local variable "endX" to match the regular expression ^[_a-z][a-z0-9_]*$.(¡µ†ß8˜”©üÉ.
+vpython:S117:"SRename this parameter "faceBox" to match the regular expression ^[_a-z][a-z0-9_]*$.(‰şùüÿÿÿÿ8˜”©üÉ.
+tpython:S116Z"QRename this field "righteyeX" to match the regular expression ^[_a-z][_a-z0-9]*$.(˜Ïıÿÿÿÿÿ8šıÉ.
+~python:S1166"[Rename this field "runningAverageScale" to match the regular expression ^[_a-z][_a-z0-9]*$.(†×²çøÿÿÿÿ8˜”©üÉ.
+}python:S117="ZRename this local variable "maskRatio" to match the regular expression ^[_a-z][a-z0-9_]*$.(ãÕÁ¶ùÿÿÿÿ8˜”©üÉ.
+zpython:S1168"WRename this field "runningAverageX" to match the regular expression ^[_a-z][_a-z0-9]*$.(òƒ¡Ùşÿÿÿÿ8˜”©üÉ.
+spython:S116Y"PRename this field "lefteyeY" to match the regular expression ^[_a-z][_a-z0-9]*$.(£àùÿÿÿÿ8êŠ˜ıÉ.
+rpython:S116d"URename this field "startingAngle" to match the regular expression ^[_a-z][_a-z0-9]*$.(œ¦ŸV8•‰ÌıÉ.
+tpython:S117]"VRename this local variable "xAxis" to match the regular expression ^[_a-z][a-z0-9_]*$.(éÈÇ8˜”©üÉ.
+vpython:S117"XRename this local variable "x1Slice" to match the regular expression ^[_a-z][a-z0-9_]*$.(éıç8˜”©üÉ.
+tpython:S116Z"QRename this field "righteyeY" to match the regular expression ^[_a-z][_a-z0-9]*$.(˜Ïıÿÿÿÿÿ8šıÉ.
+~python:S117a"[Rename this local variable "blankImage" to match the regular expression ^[_a-z][a-z0-9_]*$.(Û‰äÂıÿÿÿÿ8˜”©üÉ.

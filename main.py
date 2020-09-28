@@ -2,6 +2,14 @@ import cv2
 import numpy as np
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import facialtracking
+import sys
+import imutils
+import math
+
+
+np.set_printoptions(threshold=sys.maxsize)
+face_mask = cv2.imread("C:/Users/Owen/Programming/Python/WebcamScrewery/myface.png", -1)
+kittycat = cv2.imread("C:/Users/Owen/Programming/Python/WebcamScrewery/nyaimg.png", -1)
 
 
 def add_overlay(image, overlay, y1, x1):
@@ -19,10 +27,10 @@ def add_overlay(image, overlay, y1, x1):
 
         return image
 
-    y1 = max(y1, 0)
-    x1 = max(x1, 0)
-    y2 = y1 - y1Slice + y2Slice
-    x2 = x1 - x1Slice + x2Slice
+    y1 = int(max(y1, 0))
+    x1 = int(max(x1, 0))
+    y2 = int(y1 - y1Slice + y2Slice)
+    x2 = int(x1 - x1Slice + x2Slice)
 
     overlayAlpha = overlay[y1Slice:y2Slice, x1Slice:x2Slice, 3] / 255.0
     imageAlpha = 1.0 - overlayAlpha
@@ -32,6 +40,10 @@ def add_overlay(image, overlay, y1, x1):
                                   imageAlpha * image[y1:y2, x1:x2, c])
 
     return image
+
+
+def get_image_center(img):
+    return img.shape[0] / 2, img.shape[1] / 2
 
 
 class MapMaskToFace:
@@ -70,6 +82,57 @@ class MapMaskToFace:
         return img
 
 
+class MapFaceToEyes:
+
+    def __init__(self, mask, lefteye, righteye):
+        self.mask = mask
+
+        self.lefteyeY, self.lefteyeX = lefteye
+        self.righteyeY, self.righteyeX = righteye
+
+        yAxis = max(mask.shape[0] - self.lefteyeY, self.lefteyeY)
+        xAxis = max(mask.shape[1] - self.lefteyeX, self.lefteyeX)
+
+        size = max(xAxis, yAxis) * 2
+
+        blankImage = np.zeros((size, size, 4), dtype=np.uint8)
+        self.shapedImage = add_overlay(blankImage, mask, size/2 - self.lefteyeY, size/2 - self.lefteyeX)
+
+        self.startingAngle = self.get_angle_between_points(self.lefteyeY, self.lefteyeX, self.righteyeY, self.righteyeX)
+        self.startingDistance = self.get_distance_between_points(self.lefteyeY, self.lefteyeX, self.righteyeY, self.righteyeX)
+
+        print(self.startingAngle)
+        print(self.startingDistance)
+
+    def map(self, img, eye_positions):
+        for left, right in eye_positions:
+            dist = self.get_distance_between_points(left[0], right[0], left[1], right[1])
+            scale = dist / self.startingDistance
+
+            mask = imutils.resize(self.mask, int(self.mask.shape[0] * scale))
+
+            rotation = self.get_angle_between_points(left[0], right[0], left[1], right[1]) - self.startingAngle
+            print(f"left eye: {left[0]}, {left[1]}")
+            print(f"right eye: {right[0]}, {right[1]}")
+            print(f"rotation: {rotation}, scale: {scale}, distance: {dist}")
+
+            mask = imutils.rotate_bound(mask, rotation)
+            maskCenterY, maskCenterX = get_image_center(mask)
+
+            y = left[0] - maskCenterY
+            x = left[1] - maskCenterX
+
+            img = add_overlay(img, mask, y, x)
+
+        return img
+
+    def get_angle_between_points(self, y1, x1, y2, x2):
+        return math.degrees(math.atan2(y2-y1, x2-x1)) * -1
+
+    def get_distance_between_points(self, y1, x1, y2, x2):
+        return math.hypot(x2 - x1, y2 - y1)
+
+
 class RunningAverage:
 
     def __init__(self, targetSize):
@@ -93,10 +156,10 @@ class MJPEGServer(BaseHTTPRequestHandler):
     or republishes images from another pygecko process.
     """
 
-    mapMaskToFace = MapMaskToFace(
-        cv2.imread("C:/Users/Owen/Programming/Python/WebcamScrewery/myface.png", -1),
-        .55, 5, 2, 2
-    )
+    # mapMaskToFace = MapMaskToFace(face_mask, .55, 5, 2, 2)
+    mapMaskToFace = MapMaskToFace(kittycat, .55, 5, 2, 2)
+
+    # mapFaceToEyes = MapFaceToEyes(face_mask, (200, 135), (193, 240))
 
     camera = None
 
@@ -106,6 +169,9 @@ class MJPEGServer(BaseHTTPRequestHandler):
         faces = facialtracking.get_face(frame)
         for box in faces:
             frame = MJPEGServer.mapMaskToFace.map(frame, box)
+
+        # eyePositions = facialtracking.get_face_keypoints(frame)
+        # frame = MJPEGServer.mapFaceToEyes.map(frame, eyePositions)
 
         return ret, frame
 
@@ -135,14 +201,18 @@ class MJPEGServer(BaseHTTPRequestHandler):
 
                 ret, jpg = cv2.imencode('.jpg', img)
 
-                # print 'Compression ratio: %d4.0:1'%(compress(img.size,jpg.size))
-                self.wfile.write("--jpgboundary\r\n".encode("utf-8"))
-                self.send_header('Content-type', 'image/jpeg')
-                # self.send_header('Content-length',str(tmpFile.len))
-                self.send_header('Content-length', str(jpg.size))
-                self.end_headers()
-                self.wfile.write(jpg.tobytes())
-                # time.sleep(0.05)
+                try:
+                    # print 'Compression ratio: %d4.0:1'%(compress(img.size,jpg.size))
+                    self.wfile.write("--jpgboundary\r\n".encode("utf-8"))
+                    self.send_header('Content-type', 'image/jpeg')
+                    # self.send_header('Content-length',str(tmpFile.len))
+                    self.send_header('Content-length', str(jpg.size))
+                    self.end_headers()
+                    self.wfile.write(jpg.tobytes())
+                    # time.sleep(0.05)
+                except (ConnectionResetError, ConnectionAbortedError):
+                    print("Client disconnected from stream, waiting for next client")
+                    break
 
         elif self.path == '/':
 
@@ -170,6 +240,8 @@ class MJPEGServer(BaseHTTPRequestHandler):
 address = ("", 8080)
 
 webcam = cv2.VideoCapture(0)
+
+# mapping = MapFaceToEyes(face_mask, (200, 135), (193, 240))
 
 with HTTPServer(address, MJPEGServer) as server:
     MJPEGServer.camera = webcam

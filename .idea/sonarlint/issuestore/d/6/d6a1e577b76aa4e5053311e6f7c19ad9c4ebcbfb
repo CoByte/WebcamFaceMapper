@@ -1,0 +1,10 @@
+
+spython:S117+"URename this local variable "rEnd" to match the regular expression ^[_a-z][a-z0-9_]*$.(–ÙÓó8‡€áüÉ.
+xpython:S117*"URename this local variable "lEnd" to match the regular expression ^[_a-z][a-z0-9_]*$.(ğ‚Ó°ÿÿÿÿÿ8ÊÀßüÉ.
+|python:S117"YRename this parameter "getDetections" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÁçÆ‚úÿÿÿÿ8™ëŠüÉ.
+„python:S117-"aRename this local variable "leftEyePositions" to match the regular expression ^[_a-z][a-z0-9_]*$.(‡Œñéúÿÿÿÿ8¥€ÖüÉ.
+{python:S117?"XRename this local variable "leftPos" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ôë¹Øûÿÿÿÿ8¶·ñüÉ.
+|python:S117C"YRename this local variable "rightPos" to match the regular expression ^[_a-z][a-z0-9_]*$.(©Š°êüÿÿÿÿ8¢°öüÉ.
+zpython:S117*"WRename this local variable "lStart" to match the regular expression ^[_a-z][a-z0-9_]*$.(ğ‚Ó°ÿÿÿÿÿ8ÊÀßüÉ.
+upython:S117+"WRename this local variable "rStart" to match the regular expression ^[_a-z][a-z0-9_]*$.(–ÙÓó8‡€áüÉ.
+€python:S117."bRename this local variable "rightEyePositions" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÿ‚™ú8¥€ÖüÉ.
